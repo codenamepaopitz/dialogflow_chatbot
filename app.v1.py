@@ -11,23 +11,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
-    reply = {
-        "fulfillmentText": "Sorry what was that again?",
-    }
-
-    return jsonify(reply)
-
-
-'''
 @app.route('/medicare', methods=['POST'])
 def get_medicare_detail():
     medicare_detail = requests.get('https://data.medicare.gov/resource/av4g-y8dz.json').content
     medicare_detail = json.loads(medicare_detail)
-    req_dict = json.loads(request.data)
-    #intent = req_dict["result"]["metadata"]["intentName"]
-    #print(req_dict )
     
     response =  """
         Measure 1 : {0}<br>
@@ -45,22 +32,6 @@ def get_medicare_detail():
     #data = jsonify(medicare_detail)
     return jsonify(reply)
     #return dict(data)
-
-@app.route('/joke', methods=['POST'])
-def get_joke():
-    joke = requests.get('https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke').content
-    joke = json.loads(joke)
-    
-    response =  """
-        Joke : {0}<br>
-        """.format(joke['setup'], )
-    
-    reply = {
-        "fulfillmentText": response,
-    }
-
-    return jsonify(reply)
-'''
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
@@ -81,10 +52,8 @@ def detect_intent_texts(project_id, session_id, text, language_code):
         query_input = dialogflow.types.QueryInput(text=text_input)
         response = session_client.detect_intent(
             session=session, query_input=query_input)
-    
-    print(response.query_result.intent.display_name)
-    return response.query_result.fulfillment_text
 
+    return response.query_result.fulfillment_text    
 
 # run Flask app
 if __name__ == "__main__":
