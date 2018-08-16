@@ -85,6 +85,22 @@ def detect_intent_texts(project_id, session_id, text, language_code):
     print(response.query_result.intent.display_name)
     return response.query_result.fulfillment_text
 
+@app.route('/test', methods=['POST'])
+def test():
+    joke = requests.get('https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke').content
+    joke = json.loads(joke)
+    
+    response =  """
+        Joke : {0}<br>
+        """.format(joke['setup'], )
+    
+    reply = {
+        "fulfillmentText": response,
+    }
+
+    return jsonify(reply)
+
+
 
 # run Flask app
 if __name__ == "__main__":
